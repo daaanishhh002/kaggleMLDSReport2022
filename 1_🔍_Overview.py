@@ -64,22 +64,22 @@ st.markdown('---')
 cols = df.iloc[1, 0]
 st.text(cols)
 
-fig, ax = plt.subplots()
-sort = sorted(list(df['Q2'].value_counts().index))
-sns.countplot(data = df, x = 'Q2', 
-              hue = 'Q3', order = sort, ax = ax)
-plt.title('Distribution of Age and Gender', 
-          weight = 'bold')
-ax.set_xlabel('Age Group', labelpad = 10)
-ax.set_ylabel(None, labelpad = 10)
-ax.legend(title = 'Gender')
-plt.tight_layout()
-with st.container():
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write('Caption for second chart')
-    with col2:
-        st.pyplot(fig)
+# fig, ax = plt.subplots()
+# sort = sorted(list(df['Q2'].value_counts().index))
+# sns.countplot(data = df, x = 'Q2', 
+#               hue = 'Q3', order = sort, ax = ax)
+# plt.title('Distribution of Age and Gender', 
+#           weight = 'bold')
+# ax.set_xlabel('Age Group', labelpad = 10)
+# ax.set_ylabel(None, labelpad = 10)
+# ax.legend(title = 'Gender')
+# plt.tight_layout()
+# with st.container():
+#     col1, col2 = st.columns(2)
+#     with col1:
+#         st.write('Caption for second chart')
+#     with col2:
+#         st.pyplot(fig)
 
 
 fig, ax = plt.subplots()
