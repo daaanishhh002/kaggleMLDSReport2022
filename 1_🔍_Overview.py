@@ -7,16 +7,16 @@ import streamlit as st
 plt.style.use('ggplot')
 sns.set_theme(font = 'Georgia', palette = 'deep')
 st.title('hfehgfuewg')
-path = "C:\\Users\\dzuz1\\Desktop\\kaggleSurvey2022.csv"
+path = "C:\\Users\\dzuz1\\Desktop\\KaggleSurvey.csv"
 df = pd.read_csv(path)
 
-df = df.rename(columns = {'Duration (in seconds)': 'Q1'})
+#df = df.rename(columns = {'Duration (in seconds)': 'Q1'})
 
-schema = df.iloc[0, :]
-schema = pd.DataFrame(schema)
-schema = schema.rename(columns = {0: 'Question'})
+#schema = df.iloc[0, :]
+#schema = pd.DataFrame(schema)
+#schema = schema.rename(columns = {0: 'Question'})
 
-df = df.drop(axis = 0, index = 0)
+#df = df.drop(axis = 0, index = 0)
 
 def to_transform(start, stop, fname, sname, col_name, data = df):
     """
@@ -53,10 +53,6 @@ def to_show(sname, title):
     plt.ylabel(sname.columns[0])
     
     return fig
-
-import streamlit as st
-
-df['Q4'] = df['Q4'].str.replace('United States of America', 'United States\n of America')
 
 st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 2022", layout="centered")
 
