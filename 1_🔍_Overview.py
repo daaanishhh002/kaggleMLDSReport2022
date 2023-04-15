@@ -7,7 +7,7 @@ import streamlit as st
 plt.style.use('ggplot')
 sns.set_theme(font = 'Georgia', palette = 'deep')
 
-path = "C:\\Users\\dzuz1\\Desktop\\Python\\datasets\\kaggle_survey_2022_responses.csv"
+path = "C:\\Users\\dzuz1\\Desktop\\kaggleSurvey2022.csv"
 df = pd.read_csv(path)
 
 df = df.rename(columns = {'Duration (in seconds)': 'Q1'})
