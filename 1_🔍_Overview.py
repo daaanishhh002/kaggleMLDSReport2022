@@ -8,8 +8,9 @@ plt.style.use('ggplot')
 sns.set_theme(font = 'Georgia', palette = 'deep')
 st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 2022", layout="wide")
 
-path = "C:\\Users\\dzuz1\\Desktop\\Python\\datasets\\stars(classification).csv"
+path = "https://github.com/daaanishhh4218/kaggleMLDSReport2022/blob/main/stars(classification).csv"
 df = pd.read_csv(path)
+st.table(df)
 
 df = df.rename(columns = {'Duration (in seconds)': 'Q1'})
 
