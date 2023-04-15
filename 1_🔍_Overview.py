@@ -6,7 +6,7 @@ import streamlit as st
 
 plt.style.use('ggplot')
 sns.set_theme(font = 'Georgia', palette = 'deep')
-
+st.title('hfehgfuewg')
 path = "C:\\Users\\dzuz1\\Desktop\\kaggleSurvey2022.csv"
 df = pd.read_csv(path)
 
