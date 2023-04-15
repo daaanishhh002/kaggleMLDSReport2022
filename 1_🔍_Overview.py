@@ -8,7 +8,7 @@ plt.style.use('ggplot')
 sns.set_theme(font = 'Georgia', palette = 'deep')
 st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 2022", layout="wide")
 
-path = "https://github.com/daaanishhh4218/kaggleMLDSReport2022/blob/main/kaggle_survey_2022_responses.csv"
+path = "https://raw.githubusercontent.com/daaanishhh4218/kaggleMLDSReport2022/main/kaggle_survey_2022_responses.csv"
 df = pd.read_csv(path, on_bad_lines='skip')
 
 df = df.rename(columns = {'Duration (in seconds)': 'Q1'})
@@ -61,25 +61,23 @@ def to_show(sname, title):
 st.header('Demographical Information')
 st.markdown('---')
 
-cols = df.iloc[1, 0]
-st.text(cols)
 
-# fig, ax = plt.subplots()
-# sort = sorted(list(df['Q2'].value_counts().index))
-# sns.countplot(data = df, x = 'Q2', 
-#               hue = 'Q3', order = sort, ax = ax)
-# plt.title('Distribution of Age and Gender', 
-#           weight = 'bold')
-# ax.set_xlabel('Age Group', labelpad = 10)
-# ax.set_ylabel(None, labelpad = 10)
-# ax.legend(title = 'Gender')
-# plt.tight_layout()
-# with st.container():
-#     col1, col2 = st.columns(2)
-#     with col1:
-#         st.write('Caption for second chart')
-#     with col2:
-#         st.pyplot(fig)
+fig, ax = plt.subplots()
+sort = sorted(list(df['Q2'].value_counts().index))
+sns.countplot(data = df, x = 'Q2', 
+              hue = 'Q3', order = sort, ax = ax)
+plt.title('Distribution of Age and Gender', 
+          weight = 'bold')
+ax.set_xlabel('Age Group', labelpad = 10)
+ax.set_ylabel(None, labelpad = 10)
+ax.legend(title = 'Gender')
+plt.tight_layout()
+with st.container():
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write('Caption for second chart')
+    with col2:
+        st.pyplot(fig)
 
 
 fig, ax = plt.subplots()
