@@ -83,7 +83,7 @@ st.text(cols)
 
 
 fig, ax = plt.subplots()
-sns.countplot(data = df, x = 'Q5', ax = ax)
+sns.countplot(data = df, x = df['Q5'], ax = ax)
 plt.title('Is The Participant a Student?', weight = 'bold')
 plt.xlabel(None)
 plt.ylabel(None, labelpad = 10)
