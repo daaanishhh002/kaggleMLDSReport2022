@@ -7,16 +7,16 @@ import streamlit as st
 plt.style.use('ggplot')
 sns.set_theme(font = 'Georgia', palette = 'deep')
 st.title('hfehgfuewg')
-path = "C:\\Users\\dzuz1\\Desktop\\KaggleSurvey.csv"
-df = pd.read_csv(path)
+url = "https://github.com/daaanishhh4218/kaggleMLDSReport2022/blob/main/kaggle_survey_2022_responses.csv"
+df = pd.read_csv(url)
 
-#df = df.rename(columns = {'Duration (in seconds)': 'Q1'})
+df = df.rename(columns = {'Duration (in seconds)': 'Q1'})
 
-#schema = df.iloc[0, :]
-#schema = pd.DataFrame(schema)
-#schema = schema.rename(columns = {0: 'Question'})
+schema = df.iloc[0, :]
+schema = pd.DataFrame(schema)
+schema = schema.rename(columns = {0: 'Question'})
 
-#df = df.drop(axis = 0, index = 0)
+df = df.drop(axis = 0, index = 0)
 
 def to_transform(start, stop, fname, sname, col_name, data = df):
     """
