@@ -9,8 +9,8 @@ st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 202
 plt.style.use('ggplot')
 sns.set_theme(font = 'Georgia', palette = 'deep')
 
-path = "C:\\Users\\dzuz1\\Desktop\\Python\\datasets\\kaggle_survey_2022_responses.csv"
-df = pd.read_csv(path)
+url = "https://raw.githubusercontent.com/daaanishhh4218/kaggleMLDSReport2022/main/kaggle_survey_2022_responses.csv"
+df = pd.read_csv(url)
 
 df = df.rename(columns = {'Duration (in seconds)': 'Q1'})
 
