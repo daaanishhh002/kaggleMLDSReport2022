@@ -61,10 +61,11 @@ def to_show(sname, title):
 st.header('Demographical Information')
 st.markdown('---')
 
+cols = df.columns
+st.text(cols)
+
 fig, ax = plt.subplots()
-sort = sorted(list(df['Q2']\
-                   .value_counts()\
-                   .index))
+sort = sorted(list(df['Q2'].value_counts().index))
 sns.countplot(data = df, x = 'Q2', 
               hue = 'Q3', order = sort, ax = ax)
 plt.title('Distribution of Age and Gender', 
