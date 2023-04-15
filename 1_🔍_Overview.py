@@ -10,7 +10,7 @@ st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 202
 #plt.rcParams["axes.edgecolor"] = "black"
 #plt.rcParams["axes.linewidth"] = 0.5
 
-path = "C:\\Users\\dzuz1\\Desktop\\Python\\datasets\\kaggle_survey_2022_responses.csv"
+path = "C:/Users/dzuz1/Desktop/Python/datasets/kaggle_survey_2022_responses.csv"
 df = pd.read_csv(path)
 
 df = df.rename(columns = {'Duration (in seconds)': 'Q1'})
