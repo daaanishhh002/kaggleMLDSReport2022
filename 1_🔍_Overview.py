@@ -8,7 +8,7 @@ plt.style.use('ggplot')
 sns.set_theme(font = 'Georgia', palette = 'deep')
 st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 2022", layout="wide")
 
-path = "https://github.com/daaanishhh4218/kaggleMLDSReport2022/blob/main/stars(classification).csv"
+path = "https://github.com/daaanishhh4218/kaggleMLDSReport2022/blob/main/kaggle_survey_2022_responses.csv"
 df = pd.read_csv(path, on_bad_lines='skip')
 st.table(df)
 
