@@ -20,6 +20,8 @@ schema = schema.rename(columns = {0: 'Question'})
 
 df = df.drop(axis = 0, index = 0)
 
+st.header('here')
+
 def to_transform(start, stop, fname, sname, col_name, data = df):
     """
     Collapses multiple columns into 2 columns
