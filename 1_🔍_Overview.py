@@ -61,7 +61,7 @@ def to_show(sname, title):
 st.header('Demographical Information')
 st.markdown('---')
 
-cols = df.columns
+cols = df.iloc[1, 0]
 st.text(cols)
 
 fig, ax = plt.subplots()
