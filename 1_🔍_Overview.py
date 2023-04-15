@@ -10,7 +10,6 @@ st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 202
 
 path = "https://github.com/daaanishhh4218/kaggleMLDSReport2022/blob/main/kaggle_survey_2022_responses.csv"
 df = pd.read_csv(path, on_bad_lines='skip')
-st.table(df)
 
 df = df.rename(columns = {'Duration (in seconds)': 'Q1'})
 
