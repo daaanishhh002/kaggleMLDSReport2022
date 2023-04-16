@@ -7,7 +7,7 @@ import streamlit as st
 st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 2022", layout="wide", page_icon='👨‍💻')
 
 plt.style.use('ggplot')
-sns.set_theme(font = 'Georgia', palette = 'deep')
+sns.set_theme(palette = 'deep')
 
 url = "https://raw.githubusercontent.com/daaanishhh4218/kaggleMLDSReport2022/main/kaggle_survey_2022_responses.csv" 
 df = pd.read_csv(url)
