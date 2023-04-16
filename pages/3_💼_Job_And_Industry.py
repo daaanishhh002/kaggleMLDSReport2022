@@ -5,11 +5,11 @@ import seaborn as sns
 import streamlit as st
 
 plt.style.use('ggplot')
-sns.set_theme(palette = 'deep')
-st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 2022", layout="wide")
+sns.set_theme(font = 'Georgia', palette = 'deep')
+st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 2022", layout="wide", page_icon='👨‍💻')
 
-url = "https://raw.githubusercontent.com/daaanishhh4218/kaggleMLDSReport2022/main/kaggle_survey_2022_responses.csv"
-df = pd.read_csv(url)
+path = "C:\\Users\\dzuz1\\Desktop\\Python\\datasets\\kaggle_survey_2022_responses.csv"
+df = pd.read_csv(path)
 
 df = df.rename(columns = {'Duration (in seconds)': 'Q1'})
 
@@ -72,6 +72,8 @@ with st.container():
     with col2:
         st.write('Caption for second chart')
 
+st.write('\n')
+
 fig, ax = plt.subplots()
 role = to_transform('Q28_1', 'Q28_8', 'role_df', 'role', 'Job Role')
 role['Job Role'] = role['Job Role'].str.replace('uses', '\nuses')
@@ -91,7 +93,9 @@ with st.container():
         st.pyplot(fig)
     with col1:
         st.write('Caption for second chart')
-        
+
+st.write('\n')
+
 fig, ax = plt.subplots()
 sort = list(df['Q26'].value_counts().index)
 sns.countplot(data = df, x = 'Q26', order = sort)
@@ -104,7 +108,9 @@ with st.container():
         st.pyplot(fig)
     with col2:
         st.write('Caption for second chart')
-        
+
+st.write('\n')
+
 fig, axs = plt.subplots(3, 2, figsize = (23, 15))
 fig.suptitle('Industries Where Some ML/DS Profesionals Work In\n', weight = 'bold', size = 20)
 job = df.groupby('Q23')
@@ -140,6 +146,8 @@ with st.container():
         st.pyplot(fig)
     with col1:
         st.write('Caption for second chart')
+
+st.write('\n')
 
 fig, axes = plt.subplots(3, 2, figsize = (25, 15))
 fig.suptitle('Languages Used By Some ML/DS Professionals\n', size = 30, weight = 'bold')
@@ -212,6 +220,7 @@ with st.container():
     with col2:
         st.write('Caption for second chart')
 
+st.write('\n')
 
 fig, axes = plt.subplots(3, 2, figsize = (25, 15))
 jobrole = df.groupby('Q23')
@@ -278,6 +287,7 @@ with st.container():
     with col1:
         st.write('Caption for second chart')
 
+st.write('\n')
 
 fig, axs = plt.subplots(2, 2, figsize = (23, 10))
 fig.suptitle('Different Job Titles By Countries\n', weight = 'bold', size = 25)
@@ -325,6 +335,8 @@ with st.container():
         st.pyplot(fig)
     with col2:
         st.write('Caption for second chart')
+
+st.write('\n')
 
 fig, axs = plt.subplots(5, 3, figsize = (30, 30))
 country_job_salary = df.groupby(['Q4', 'Q23'])
@@ -440,6 +452,8 @@ with st.container():
         st.pyplot(fig)
     with col1:
         st.write('Caption for second chart')
+
+st.write('\n')
 
 fig, axs = plt.subplots(3, 2, figsize = (25, 15))
 fig.suptitle('What One Can Expect To Do As Per The Job Title\n', weight = 'bold', size = 30)
