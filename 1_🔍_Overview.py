@@ -149,7 +149,7 @@ sns.barplot(data = courses, y = 'Courses', x = 'Count', ax = ax2, palette='deep'
 ax = ax2; ax.invert_xaxis(); ax2.yaxis.set_ticks_position('right'); 
 ax2.set_ylabel(None); ax2.set_xlabel(None)
 ax2.set_yticklabels(courses['Courses'], size = 14)
-ax2.set_xticklabels(ax2.get_xticks(), size = 12)
+ax2.set_xticklabels(ax2.get_xticks(), size = 11)
 fig.suptitle('What Introduced Them To Data Science\nVS\nMost Helpful Course', weight = 'bold', size = 15)
 plt.tight_layout()
 st.pyplot(fig)
