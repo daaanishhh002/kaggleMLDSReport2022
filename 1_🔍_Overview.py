@@ -5,7 +5,7 @@ import seaborn as sns
 import streamlit as st
 
 plt.style.use('ggplot')
-sns.set_theme(font = 'Georgia', palette = 'deep')
+sns.set_theme(palette = 'deep')
 
 url = "https://raw.githubusercontent.com/daaanishhh4218/kaggleMLDSReport2022/main/kaggle_survey_2022_responses.csv" 
 df = pd.read_csv(url)
