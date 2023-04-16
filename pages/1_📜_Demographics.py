@@ -4,11 +4,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
 
+st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 2022", layout="wide", page_icon='👨‍💻')
+
 plt.style.use('ggplot')
 sns.set_theme(font = 'Georgia', palette = 'deep')
-st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 2022", layout="wide", page_icon='👨‍💻')
-#plt.rcParams["axes.edgecolor"] = "black"
-#plt.rcParams["axes.linewidth"] = 0.5
 
 path = "C:\\Users\\dzuz1\\Desktop\\Python\\datasets\\kaggle_survey_2022_responses.csv"
 df = pd.read_csv(path)
@@ -47,7 +46,7 @@ def to_show(sname, title):
     """
     Plots horizontal barplot.
     """
-    fig = plt.subplots()
+    fig, ax = plt.subplots()
     sns.barplot(data = sname, x = 'Count', y = sname.columns[0], palette = 'deep', ax = ax)
     
     title = title.title()
@@ -57,301 +56,181 @@ def to_show(sname, title):
     
     return fig
 
-
-st.header('Demographical Information')
+st.header('Some Infographics Related To Programming')
 st.markdown('---')
 
-fig, ax = plt.subplots()
-sort = sorted(list(df['Q2']\
-                   .value_counts()\
-                   .index))
-sns.countplot(data = df, x = 'Q2', 
-              hue = 'Q3', order = sort, ax = ax)
-plt.title('Distribution of Age and Gender', 
-          weight = 'bold')
-ax.set_xlabel('Age Group', labelpad = 10)
-ax.set_ylabel(None, labelpad = 10)
-ax.legend(title = 'Gender')
-plt.tight_layout()
-with st.container():
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write('Caption for second chart')
-    with col2:
-        st.pyplot(fig)
-
-st.write('\n')
 
 fig, ax = plt.subplots()
-sns.countplot(data = df, x = 'Q5', ax = ax)
-plt.title('Is The Participant a Student?', weight = 'bold')
-plt.xlabel(None)
-plt.ylabel(None, labelpad = 10)
-plt.ylim(11600, 12100)
-plt.tight_layout()
-with st.container():
-    col1, col2 = st.columns(2)
-    with col2:
-        st.write('Caption for second chart')
-    with col1:
-        st.pyplot(fig)
-
-st.write('\n')
-
-fig, ax = plt.subplots()
-temp = df['Q4'].value_counts().drop('Other').head()
-temp = temp.reset_index()
-temp['index'] = temp['index'].str.replace('of', '\nof')
-sns.barplot(data = temp, x = 'Q4', y = 'index')
-plt.title('Countries With The Most Amount of Participants', 
-          weight = 'bold', pad = 10)
-plt.xlabel(None, labelpad = 10)
-plt.ylabel(None, labelpad = 10)
-plt.tight_layout()
-with st.container():
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write('Caption for second chart')
-    with col2:
-        st.pyplot(fig)
-
-st.write('\n')
-
-df['Q8'] = df['Q8'].str.replace('education', 'education\n')
-df['Q8'] = df['Q8'].str.replace('university', 'university\n')
-df['Q8'] = df['Q8'].str.replace('earning', 'earning\n')
-fig, ax = plt.subplots(1, 1)
-sns.countplot(data = df, y = 'Q8', ax = ax)
-plt.title('Education Status of Participants', weight = 'bold')
+df['Q11'] = df['Q11'].str.replace('never', 'never\n')
+sort = list(df['Q11'].value_counts().index)
+sns.countplot(data = df, y = 'Q11', order = sort)
+plt.title('Coding For How Long?', weight = 'bold')
 plt.xlabel(None, labelpad = 15)
-plt.ylabel(None, labelpad = 15)
+plt.ylabel(None)
+plt.tight_layout()
+with st.container():
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write('Caption for second chart')
+    with col2:
+        st.pyplot(fig)
+
+st.write('\n')
+
+fig, ax = plt.subplots()
+lang = to_transform('Q12_1', 'Q12_15', 'lang_df', 'lang', 'Language')
+sns.barplot(data = lang, y = 'Language', x = 'Count', palette = 'deep')
+plt.title('Top Languages Used On A Regular Basis', weight = 'bold')
+plt.xlabel(None, labelpad = 10)
+plt.ylabel(None, labelpad = 10)   
+with st.container():
+    col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(fig)
+    with col2:
+        st.write('Caption for second chart')
+
+st.write('\n')
+
+fig, ax = plt.subplots()
+visual = to_transform('Q15_1', 'Q15_15', 'v_df', 'visual', 'Visualisation Library')
+visual['Visualisation Library'] = visual['Visualisation Library'].drop(4)
+fig= to_show(sname = visual, title = 'Top Visualisation Libraries Used On A regualar Basis')
+plt.xlabel(None)
+plt.ylabel(None)
 with st.container():
     col1, col2 = st.columns(2)
     with col2:
-        st.success('This is a success message!', icon="✅")
-    with col1:
         st.pyplot(fig)
-
-st.write('\n')
-
-fig, axs = plt.subplots(3, 2, figsize = (30, 20))
-fig.suptitle('Education Requirement For Some ML/DS Jobs\n', size = 35, weight = 'bold')
-job = df.groupby('Q23')
-#'Data Scientist'
-job_df = job.get_group('Data Scientist')['Q8'].value_counts()
-job_df = job_df.reset_index()
-sns.barplot(data= job_df, x = 'index', y = 'Q8', palette = 'deep', ax = axs[0][0])
-ax = axs[0][0]
-ax.set_xticklabels(job_df['index'].unique(), fontsize=14)
-ax.set_yticklabels(ax.get_yticks(), size = 14)
-ax.set_ylabel(None)
-ax.set_xlabel(None, labelpad = 10)
-ax.set_title('Data Scientist', loc = 'right', size = 25)
-#'Software Engineer'
-job_df = job.get_group('Software Engineer')['Q8'].value_counts()
-job_df = job_df.reset_index()
-sns.barplot(data= job_df, x = 'index', y = 'Q8', palette = 'deep', ax = axs[1][1])
-ax = axs[1][1]
-ax.set_xticklabels(job_df['index'].unique(), fontsize=14)
-ax.set_yticklabels(ax.get_yticks(), size = 14)
-ax.set_ylabel(None)
-ax.set_xlabel(None, labelpad = 10)
-ax.set_title('Software Engineer', loc = 'right', size = 20)
-#'Data Analyst'
-job_df = job.get_group('Data Analyst (Business, Marketing, Financial, Quantitative, etc)')['Q8'].value_counts()
-job_df = job_df.reset_index()
-sns.barplot(data= job_df, x = 'index', y = 'Q8', palette = 'deep', ax = axs[1][0])
-ax = axs[1][0]
-ax.set_xticklabels(job_df['index'].unique(), fontsize=14)
-ax.set_yticklabels(ax.get_yticks(), size = 14)
-ax.set_ylabel(None)
-ax.set_xlabel(None, labelpad = 10)
-ax.set_title('Data Analyst', loc = 'right', size = 25)
-#ML Engineer
-job_df = job.get_group('Machine Learning/ MLops Engineer')['Q8'].value_counts()
-job_df = job_df.reset_index()
-sns.barplot(data= job_df, x = 'index', y = 'Q8', palette = 'deep', ax = axs[0][1])
-ax = axs[0][1]
-ax.set_xticklabels(job_df['index'].unique(), fontsize=14)
-ax.set_yticklabels(ax.get_yticks(), size = 14)
-ax.set_ylabel(None)
-ax.set_xlabel(None, labelpad = 10)
-ax.set_title('Machine Learning Engineer', loc = 'right', size = 25)
-#'Research Scientist'
-job_df = job.get_group('Research Scientist')['Q8'].value_counts()
-job_df = job_df.reset_index()
-sns.barplot(data= job_df, x = 'index', y = 'Q8', palette = 'deep', ax = axs[2][0])
-ax = axs[2][0]
-ax.set_xticklabels(job_df['index'].unique(), fontsize=14)
-ax.set_yticklabels(ax.get_yticks(), size = 14)
-ax.set_ylabel(None)
-ax.set_xlabel(None, labelpad = 10)
-ax.set_title('Research Scientist', loc = 'right', size = 25)
-#'Manager'
-job_df = job.get_group('Manager (Program, Project, Operations, Executive-level, etc)')['Q8'].value_counts()
-job_df = job_df.reset_index()
-sns.barplot(data= job_df, x = 'index', y = 'Q8', palette = 'deep', ax = axs[2][1])
-ax = axs[2][1]
-ax.set_xticklabels(job_df['index'].unique(), fontsize=14)
-ax.set_yticklabels(ax.get_yticks(), size = 14)
-ax.set_ylabel(None)
-ax.set_xlabel(None, labelpad = 10)
-ax.set_title('Manager', loc = 'right', size = 25)
-plt.tight_layout()
-with st.container():
-    col1, col2 = st.columns([1, 3])
     with col1:
         st.write('Caption for second chart')
-    with col2:
-        st.pyplot(fig)
 
 st.write('\n')
 
-fig, axes = plt.subplots(2, 2, figsize = (30, 16))
-fig.suptitle('Education Level Among Some Countries\n', size = 30, weight = 'bold')
-country = df.groupby('Q4')
-#'India'
-c_df = country.get_group('India')
-sns.countplot(data = c_df, y = 'Q8', ax = axes[0][0], order = list(c_df['Q8'].value_counts().index))
-ax = axes[0][0]
-ax.set_yticklabels(c_df['Q8'].value_counts().index, fontsize=20)
-ax.set_xticklabels(ax.get_xticks(), size = 15)
-ax.set_title('India', loc = 'right', size = 25)
-ax.set_ylabel(None)
-ax.set_xlabel(None)
-#'United States of America'
-c_df = country.get_group('United States of America')
-sns.countplot(data = c_df, y = 'Q8', ax = axes[0][1], order = list(c_df['Q8'].value_counts().index))
-ax = axes[0][1]
-ax.set_yticklabels(c_df['Q8'].value_counts().index, fontsize=20)
-ax.set_xticklabels(ax.get_xticks(), size = 15)
-ax.set_title('USA', loc = 'right', size = 25)
-ax.set_ylabel(None)
-ax.set_xlabel(None)
-#'UK'
-c_df = country.get_group('United Kingdom of Great Britain and Northern Ireland')
-sns.countplot(data = c_df, y = 'Q8', ax = axes[1][0], order = list(c_df['Q8'].value_counts().index))
-ax = axes[1][0]
-ax.set_yticklabels(c_df['Q8'].value_counts().index, fontsize=20)
-ax.set_xticklabels(ax.get_xticks(), size = 15)
-ax.set_title('UK', loc = 'right', size = 25)
-ax.set_ylabel(None)
-ax.set_xlabel(None)
-#'Canada'
-c_df = country.get_group('Canada')
-sns.countplot(data = c_df, y = 'Q8', ax = axes[1][1], order = list(c_df['Q8'].value_counts().index))
-ax = axes[1][1]
-ax.set_yticklabels(c_df['Q8'].value_counts().index, fontsize=20)
-ax.set_xticklabels(ax.get_xticks(), size = 15)
-ax.set_title('Canada', loc = 'right', size = 25)
-ax.set_ylabel(None)
-ax.set_xlabel(None)
-plt.tight_layout()
-with st.container():
-    col1, col2 = st.columns([3, 1])
-    with col2:
-        st.write('Caption for second chart')
-    with col1:
-        st.pyplot(fig)
-
-st.write('\n')
-
-fig, axs = plt.subplots(3, 2, figsize = (25, 17))
-country = df.groupby('Q4')
-fig.suptitle('Annual Income Per Country\n', weight = 'bold', size = 30)
-fig.supxlabel(None, weight = 'bold', size = 20)
-# 'India'
-x = country.get_group('India')['Q29'].\
-                        value_counts().head(10)\
-                        .plot(kind = 'barh', ax = axs[0][0], 
-                              color = sns.palettes.color_palette('deep'))
-ticks = country.get_group('India')['Q29'].value_counts().head(10).index
-x.set_title('India', size = 20, loc = 'right')
-x.set_ylabel(None)
-x.set_yticklabels(ticks, fontsize=20)
-x.set_xticklabels(x.get_xticks(), size = 14)
-#x.set_xlabel('Count', labelpad = 10)
-x.invert_yaxis()
-# 'United States of America'
-x = country.get_group('United States of America')['Q29'].\
-                        value_counts().head(10)\
-                        .plot(kind = 'barh', ax = axs[0][1], 
-                              color = sns.palettes.color_palette('deep'))
-x.set_title('USA', size = 20, loc = 'right')
-x.set_ylabel(None)
-ticks = country.get_group('United States of America')['Q29'].value_counts().head(10).index
-x.set_yticklabels(ticks, fontsize=20)
-x.set_xticklabels(x.get_xticks(), size = 14)
-#x.set_xlabel('Count', labelpad = 10)
-x.invert_yaxis()
-# 'Canada'
-x = country.get_group('Canada')['Q29'].\
-                        value_counts().head(10)\
-                        .plot(kind = 'barh', ax = axs[1][0], 
-                              color = sns.palettes.color_palette('deep'))
-x.set_title('Canada', size = 20, loc = 'right')
-x.set_ylabel(None)
-ticks = country.get_group('Canada')['Q29'].value_counts().head(10).index
-x.set_yticklabels(ticks, fontsize=20)
-x.set_xticklabels(x.get_xticks(), size = 14)
-#x.set_xlabel('Count', labelpad = 10)
-x.invert_yaxis()
-# 'United Kingdom of Great Britain and Northern Ireland'
-x = country.get_group('United Kingdom of Great Britain and Northern Ireland')['Q29'].\
-                        value_counts().head(10)\
-                        .plot(kind = 'barh', ax = axs[1][1], 
-                              color = sns.palettes.color_palette('deep'))
-x.set_title('UK', size = 20, loc = 'right')
-x.set_ylabel(None)
-ticks = country.get_group('United Kingdom of Great Britain and Northern Ireland')['Q29'].value_counts().head(10).index
-x.set_yticklabels(ticks, fontsize=20)
-x.set_xticklabels(x.get_xticks(), size = 14)
-#x.set_xlabel('Count', labelpad = 10)
-x.invert_yaxis()
-# 'Australia'
-x = country.get_group('Australia')['Q29'].\
-                        value_counts().head(10)\
-                        .plot(kind = 'barh', ax = axs[2][0], 
-                              color = sns.palettes.color_palette('deep'))
-x.set_title('Australia', size = 20, loc = 'right')
-x.set_ylabel(None)
-ticks = country.get_group('Australia')['Q29'].value_counts().head(10).index
-x.set_yticklabels(ticks, fontsize=20)
-x.set_xticklabels(x.get_xticks(), size = 14)
-#x.set_xlabel('Count', labelpad = 10)
-x.invert_yaxis()
-# 'United Arab Emirates'
-x = country.get_group('United Arab Emirates')['Q29'].\
-                        value_counts().head(10)\
-                        .plot(kind = 'barh', ax = axs[2][1], 
-                              color = sns.palettes.color_palette('deep')) 
-x.set_title('UAE', size = 20, loc = 'right')
-x.set_ylabel(None)
-ticks = country.get_group('United Arab Emirates')['Q29'].value_counts().head(10).index
-x.set_yticklabels(ticks, fontsize=20)
-x.set_xticklabels(x.get_xticks(), size = 14)
-#x.set_xlabel('Count', labelpad = 10)
-x.invert_yaxis()
-plt.tight_layout()
-with st.container():
-    col1, col2 = st.columns([1, 3])
-    with col1:
-        st.write('Caption for second chart')
-    with col2:
-        st.pyplot(fig)
-
-st.write('\n')
-
-media = to_transform('Q44_1', 'Q44_12', 'media_df', 'media', 'Media Source')
 fig, ax = plt.subplots()
-to_show(media, 'favourite media souces for machine learning and data science')
-ax.set_title('Favourite Media Sources For Machine Learning And Data Science', weight = 'bold')
-ax.set_xlabel(None)
-ax.set_ylabel(None)
-plt.tight_layout()
+df['Q16'] = df['Q16'].str.replace('machine', 'machine\n')
+sns.countplot(data = df, y = 'Q16', palette = 'deep')
+plt.title('Using Machine Learning Methods For How Long?', weight = 'bold')
+plt.xlabel(None, labelpad = 10)
+plt.ylabel(None)
 with st.container():
-    col1, col2 = st.columns([2, 1])
-    with col2:
-        st.write('Caption for second chart')
+    col1, col2 = st.columns(2)
     with col1:
         st.pyplot(fig)
+    with col2:
+        st.write('Caption for second chart')
+        
+def container(col1, col2):
+    
+    with st.container():
+        col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(fig)
+    with col2:
+        st.write('Caption for second chart')
+        
+fig, ax = plt.subplots()
+ml_frame = to_transform('Q17_1', 'Q17_15', 'ml_df', 'ml_frame', 'ML Framework')
+ml_frame['ML Framework'] = ml_frame['ML Framework'].drop(6)
+fig = to_show(ml_frame, 'regularly used machine learning frameworks')
+plt.xlabel(None)
+plt.ylabel(None)
+with st.container():
+    col1, col2 = st.columns(2)
+    with col2:
+        st.pyplot(fig)
+    with col1:
+        st.write('Caption for second chart')
+
+st.write('\n')
+
+fig, ax = plt.subplots()
+ml_algo = to_transform('Q18_1', 'Q18_14', 'ml_df', 'ml_algo', 'ML Algorithm')
+ml_algo['ML Algorithm'] = ml_algo['ML Algorithm'].str.replace('(', '\n(')
+ml_algo['ML Algorithm'] = ml_algo['ML Algorithm'].drop([9, 13])
+fig = to_show(ml_algo, 'top regularly used machine learning algorithms')
+plt.xlabel(None)
+plt.ylabel(None)
+with st.container():
+    col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(fig)
+    with col2:
+        st.write('Caption for second chart')
+
+st.write('\n')
+
+fig, ax = plt.subplots(1, 1, figsize = (25, 15))
+cv = to_transform('Q19_1', 'Q19_8', 'cv_df', 'cv', 'CV Algorithm')
+cv['CV Algorithm'] = cv['CV Algorithm'].str.replace('(', '\n(')
+cv['CV Algorithm'] = cv['CV Algorithm'].drop([4, 7])
+fig = to_show(cv, 'computer vision algorithms used on a regular basis')
+plt.xlabel(None)
+plt.ylabel(None)
+with st.container():
+    col1, col2 = st.columns(2)
+    with col2:
+        st.pyplot(fig)
+    with col1:
+        st.write('Caption for second chart')
+
+st.write('\n')
+
+fig, ax = plt.subplots()
+nlp = to_transform('Q20_1', 'Q20_6', 'nlp_df', 'nlp', 'NLP Algorithm')
+nlp['NLP Algorithm'] = nlp['NLP Algorithm'].str.replace('(', '\n(')
+nlp['NLP Algorithm'] = nlp['NLP Algorithm'].drop(3)
+fig = to_show(nlp, 'regularly used natural language processing algorithms')
+plt.xlabel(None)
+plt.ylabel(None)
+with st.container():
+    col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(fig)
+    with col2:
+        st.write('Caption for second chart')
+
+st.write('\n')
+
+fig, ax = plt.subplots()
+cloud = to_transform('Q31_1', 'Q31_12', 'cloud_df', 'cloud', 'Cloud Service')
+cloud['Cloud Service'] = cloud['Cloud Service'].drop([3, 6])
+fig = to_show(cloud, 'top used cloud service')
+plt.xlabel(None)
+plt.ylabel(None)
+with st.container():
+    col1, col2 = st.columns(2)
+    with col2:
+        st.pyplot(fig)
+    with col1:
+        st.write('Caption for second chart')
+
+st.write('\n')
+
+fig, ax = plt.subplots()
+db = to_transform('Q35_1', 'Q35_16', 'db_df', 'db', 'Database')
+db['Database'] = db['Database'].drop([5, 14])
+fig = to_show(db, 'top used databases')
+plt.xlabel(None)
+plt.ylabel(None)
+with st.container():
+    col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(fig)
+    with col2:
+        st.write('Caption for second chart')
+
+st.write('\n')
+
+fig, ax = plt.subplots()
+bi = to_transform('Q36_1', 'Q36_15', 'bi_df', 'bi', 'BI Tool')
+bi['BI Tool'] = bi['BI Tool'].drop([0, 6])
+fig = to_show(bi, 'top used business intelligence tools')
+plt.xlabel(None)
+plt.ylabel(None)
+with st.container():
+    col1, col2 = st.columns(2)
+    with col2:
+        st.pyplot(fig)
+    with col1:
+        st.write('Caption for second chart')
