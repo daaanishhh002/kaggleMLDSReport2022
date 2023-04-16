@@ -4,10 +4,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
 
-st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 2022", layout="wide", page_icon='👨‍💻')
-
 plt.style.use('ggplot')
 sns.set_theme(font = 'Georgia', palette = 'deep')
+st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 2022", layout="wide", page_icon='👨‍💻')
 
 path = "C:\\Users\\dzuz1\\Desktop\\Python\\datasets\\kaggle_survey_2022_responses.csv"
 df = pd.read_csv(path)
@@ -56,50 +55,93 @@ def to_show(sname, title):
     
     return fig
 
-st.header('Some Infographics Related To Programming')
+st.header(':black[Job and Industry Related Visuals]')
 st.markdown('---')
 
+fig, ax = plt.subplots()
+sort = list(df['Q23'].value_counts().index)
+sns.countplot(data = df, y = 'Q23', 
+                    order = sort, palette = 'deep')
+plt.title('Jobs In The ML/DS Space', weight = 'bold')
+plt.xlabel(None, labelpad = 10)
+plt.ylabel(None)
+with st.container():
+    col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(fig)
+    with col2:
+        st.write('Caption for second chart')
+
+st.write('\n')
 
 fig, ax = plt.subplots()
-df['Q11'] = df['Q11'].str.replace('never', 'never\n')
-sort = list(df['Q11'].value_counts().index)
-sns.countplot(data = df, y = 'Q11', order = sort)
-plt.title('Coding For How Long?', weight = 'bold')
-plt.xlabel(None, labelpad = 15)
+role = to_transform('Q28_1', 'Q28_8', 'role_df', 'role', 'Job Role')
+role['Job Role'] = role['Job Role'].str.replace('uses', '\nuses')
+role['Job Role'] = role['Job Role'].str.replace('influence', 'influence\n')
+role['Job Role'] = role['Job Role'].str.replace('applying', 'applying\n')
+role['Job Role'] = role['Job Role'].str.replace('to improve', 'to\nimprove')
+role['Job Role'] = role['Job Role'].str.replace('operationally', '\noperationally')
+role['Job Role'] = role['Job Role'].str.replace(' art', '\nart')
+role['Job Role'] = role['Job Role'].str.replace('part', '\npart')
+plt.figure(figsize = (8, 6.5))
+fig = to_show(role, 'important role at work')
+plt.xlabel(None)
 plt.ylabel(None)
+with st.container():
+    col1, col2 = st.columns(2)
+    with col2:
+        st.pyplot(fig)
+    with col1:
+        st.write('Caption for second chart')
+
+st.write('\n')
+
+fig, ax = plt.subplots()
+sort = list(df['Q26'].value_counts().index)
+sns.countplot(data = df, x = 'Q26', order = sort)
+plt.title('Typical Size Of Data Science Department In Companies', weight = 'bold')
+plt.xlabel(None, labelpad = 10)
+plt.ylabel(None)
+with st.container():
+    col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(fig)
+    with col2:
+        st.write('Caption for second chart')
+
+st.write('\n')
+
+fig, axs = plt.subplots(3, 2, figsize = (23, 15))
+fig.suptitle('Industries Where Some ML/DS Profesionals Work In\n', weight = 'bold', size = 20)
+job = df.groupby('Q23')
+job_df = job.get_group('Data Scientist')['Q24'].value_counts()
+g = job_df.head().plot.pie(ax = axs[0][0], startangle = 45)
+g.set_title('Data Scientist', loc = 'center', size = 15)
+#g.set_label(g.get_label(), fontsize = 15)
+g.set_ylabel(None)
+job_df = job.get_group('Software Engineer')['Q24'].value_counts()
+g = job_df.head().plot.pie(ax = axs[0][1], startangle = 45)
+g.set_title('Software Engineer', loc = 'center', size = 15) 
+g.set_ylabel(None)
+job_df = job.get_group('Data Analyst (Business, Marketing, Financial, Quantitative, etc)')['Q24'].value_counts()
+g = job_df.head().plot.pie(ax = axs[1][0], startangle = 0)
+g.set_title('Data Analyst', loc = 'center', size = 15)
+g.set_ylabel(None)
+job_df = job.get_group('Machine Learning/ MLops Engineer')['Q24'].value_counts()
+g = job_df.head().plot.pie(ax = axs[1][1], startangle = 45)
+g.set_title('ML Engineer', loc = 'center', size = 15)
+g.set_ylabel(None)
+job_df = job.get_group('Research Scientist')['Q24'].value_counts()
+g = job_df.head().plot.pie(ax = axs[2][0], startangle = 45)
+g.set_title('Research Scientist', loc = 'center', size = 15)
+g.set_ylabel(None)
+job_df = job.get_group('Data Engineer')['Q24'].value_counts()
+g = job_df.head().plot.pie(ax = axs[2][1], startangle = 45)
+g.set_title('Data Engineer', loc = 'center', size = 15)
+g.set_ylabel(None)
 plt.tight_layout()
 with st.container():
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write('Caption for second chart')
-    with col2:
-        st.pyplot(fig)
-
-st.write('\n')
-
-fig, ax = plt.subplots()
-lang = to_transform('Q12_1', 'Q12_15', 'lang_df', 'lang', 'Language')
-sns.barplot(data = lang, y = 'Language', x = 'Count', palette = 'deep')
-plt.title('Top Languages Used On A Regular Basis', weight = 'bold')
-plt.xlabel(None, labelpad = 10)
-plt.ylabel(None, labelpad = 10)   
-with st.container():
-    col1, col2 = st.columns(2)
-    with col1:
-        st.pyplot(fig)
-    with col2:
-        st.write('Caption for second chart')
-
-st.write('\n')
-
-fig, ax = plt.subplots()
-visual = to_transform('Q15_1', 'Q15_15', 'v_df', 'visual', 'Visualisation Library')
-visual['Visualisation Library'] = visual['Visualisation Library'].drop(4)
-fig= to_show(sname = visual, title = 'Top Visualisation Libraries Used On A regualar Basis')
-plt.xlabel(None)
-plt.ylabel(None)
-with st.container():
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 2])
     with col2:
         st.pyplot(fig)
     with col1:
@@ -107,84 +149,72 @@ with st.container():
 
 st.write('\n')
 
-fig, ax = plt.subplots()
-df['Q16'] = df['Q16'].str.replace('machine', 'machine\n')
-sns.countplot(data = df, y = 'Q16', palette = 'deep')
-plt.title('Using Machine Learning Methods For How Long?', weight = 'bold')
-plt.xlabel(None, labelpad = 10)
-plt.ylabel(None)
+fig, axes = plt.subplots(3, 2, figsize = (25, 15))
+fig.suptitle('Languages Used By Some ML/DS Professionals\n', size = 30, weight = 'bold')
+jobrole = df.groupby('Q23')
+#'Data Scientist'
+ds_df = jobrole.get_group('Data Scientist')
+ds_df = to_transform('Q12_1', 'Q12_15', 'lang_df', 'lang', 'Languages', data = ds_df)
+sns.barplot(data = ds_df, x = ds_df['Languages'][:5], y = 'Count', ax = axes[0][0], palette = 'deep')
+ax = axes[0][0]
+ax.set_title('Data Scientist', loc = 'right', size = 20)
+ax.set_ylabel(None)
+ax.set_xlabel(None)
+ax.set_xticklabels(ds_df['Languages'][:5], fontsize = 14)
+ax.set_yticklabels(ax.get_yticks(), fontsize = 15)
+#'Machine Learning/ MLops Engineer'
+ds_df = jobrole.get_group('Machine Learning/ MLops Engineer')
+ds_df = to_transform('Q12_1', 'Q12_15', 'lang_df', 'lang', 'Languages', data = ds_df)
+sns.barplot(data = ds_df, x = ds_df['Languages'][:5], y = 'Count', ax = axes[0][1], palette = 'deep')
+ax = axes[0][1]
+ax.set_title('Machine Learning Engineer', loc = 'right', size = 20)
+ax.set_ylabel(None)
+ax.set_xlabel(None)
+ax.set_xticklabels(ds_df['Languages'][:5], fontsize = 14)
+ax.set_yticklabels(ax.get_yticks(), fontsize = 15)
+#'Data Analyst (Business, Marketing, Financial, Quantitative, etc)'
+ds_df = jobrole.get_group('Data Analyst (Business, Marketing, Financial, Quantitative, etc)')
+ds_df = to_transform('Q12_1', 'Q12_15', 'lang_df', 'lang', 'Languages', data = ds_df)
+sns.barplot(data = ds_df, x = ds_df['Languages'][:5], y = 'Count', ax = axes[1][0], palette = 'deep')
+ax = axes[1][0]
+ax.set_title('Data Analyst', loc = 'right', size = 20)
+ax.set_ylabel(None)
+ax.set_xlabel(None)
+ax.set_xticklabels(ds_df['Languages'][:5], fontsize = 14)
+ax.set_yticklabels(ax.get_yticks(), fontsize = 15)
+#'Research Scientist'
+ds_df = jobrole.get_group('Research Scientist')
+ds_df = to_transform('Q12_1', 'Q12_15', 'lang_df', 'lang', 'Languages', data = ds_df)
+sns.barplot(data = ds_df, x = ds_df['Languages'][:5], y = 'Count', ax = axes[1][1], palette = 'deep')
+ax = axes[1][1]
+ax.set_title('Research Scientist', loc = 'right', size = 20)
+ax.set_ylabel(None)
+ax.set_xlabel(None)
+ax.set_xticklabels(ds_df['Languages'][:5], fontsize = 14)
+ax.set_yticklabels(ax.get_yticks(), fontsize = 15)
+# 'Software Engineer'
+ds_df = jobrole.get_group('Software Engineer')
+ds_df = to_transform('Q12_1', 'Q12_15', 'lang_df', 'lang', 'Languages', data = ds_df)
+sns.barplot(data = ds_df, y = 'Count', x = ds_df['Languages'][:5], ax = axes[2][0], palette = 'deep')
+ax = axes[2][0]
+ax.set_title('Software Engineer', loc = 'right', size = 20)
+ax.set_ylabel(None)
+ax.set_xlabel(None)
+ax.set_xticklabels(ds_df['Languages'][:5], fontsize = 14)
+ax.set_yticklabels(ax.get_yticks(), fontsize = 15)
+# 'Manager'
+ds_df = jobrole.get_group('Manager (Program, Project, Operations, Executive-level, etc)')
+ds_df = to_transform('Q12_1', 'Q12_15', 'lang_df', 'lang', 'Languages', data = ds_df)
+sns.barplot(data = ds_df, y = 'Count', x = ds_df['Languages'][:5], ax = axes[2][1], palette = 'deep')
+ax = axes[2][1]
+ax.set_title('Manager', loc = 'right', size = 20)
+ax.set_ylabel(None)
+ax.set_xlabel(None)
+ax.set_xticklabels(ds_df['Languages'][:5], fontsize = 14)
+ax.set_yticklabels(ax.get_yticks(), fontsize = 15)
+plt.tight_layout()
 with st.container():
-    col1, col2 = st.columns(2)
-    with col1:
-        st.pyplot(fig)
-    with col2:
-        st.write('Caption for second chart')
-        
-def container(col1, col2):
-    
-    with st.container():
-        col1, col2 = st.columns(2)
-    with col1:
-        st.pyplot(fig)
-    with col2:
-        st.write('Caption for second chart')
-        
-fig, ax = plt.subplots()
-ml_frame = to_transform('Q17_1', 'Q17_15', 'ml_df', 'ml_frame', 'ML Framework')
-ml_frame['ML Framework'] = ml_frame['ML Framework'].drop(6)
-fig = to_show(ml_frame, 'regularly used machine learning frameworks')
-plt.xlabel(None)
-plt.ylabel(None)
-with st.container():
-    col1, col2 = st.columns(2)
-    with col2:
-        st.pyplot(fig)
-    with col1:
-        st.write('Caption for second chart')
-
-st.write('\n')
-
-fig, ax = plt.subplots()
-ml_algo = to_transform('Q18_1', 'Q18_14', 'ml_df', 'ml_algo', 'ML Algorithm')
-ml_algo['ML Algorithm'] = ml_algo['ML Algorithm'].str.replace('(', '\n(')
-ml_algo['ML Algorithm'] = ml_algo['ML Algorithm'].drop([9, 13])
-fig = to_show(ml_algo, 'top regularly used machine learning algorithms')
-plt.xlabel(None)
-plt.ylabel(None)
-with st.container():
-    col1, col2 = st.columns(2)
-    with col1:
-        st.pyplot(fig)
-    with col2:
-        st.write('Caption for second chart')
-
-st.write('\n')
-
-fig, ax = plt.subplots(1, 1, figsize = (25, 15))
-cv = to_transform('Q19_1', 'Q19_8', 'cv_df', 'cv', 'CV Algorithm')
-cv['CV Algorithm'] = cv['CV Algorithm'].str.replace('(', '\n(')
-cv['CV Algorithm'] = cv['CV Algorithm'].drop([4, 7])
-fig = to_show(cv, 'computer vision algorithms used on a regular basis')
-plt.xlabel(None)
-plt.ylabel(None)
-with st.container():
-    col1, col2 = st.columns(2)
-    with col2:
-        st.pyplot(fig)
-    with col1:
-        st.write('Caption for second chart')
-
-st.write('\n')
-
-fig, ax = plt.subplots()
-nlp = to_transform('Q20_1', 'Q20_6', 'nlp_df', 'nlp', 'NLP Algorithm')
-nlp['NLP Algorithm'] = nlp['NLP Algorithm'].str.replace('(', '\n(')
-nlp['NLP Algorithm'] = nlp['NLP Algorithm'].drop(3)
-fig = to_show(nlp, 'regularly used natural language processing algorithms')
-plt.xlabel(None)
-plt.ylabel(None)
-with st.container():
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([2, 1])
     with col1:
         st.pyplot(fig)
     with col2:
@@ -192,14 +222,66 @@ with st.container():
 
 st.write('\n')
 
-fig, ax = plt.subplots()
-cloud = to_transform('Q31_1', 'Q31_12', 'cloud_df', 'cloud', 'Cloud Service')
-cloud['Cloud Service'] = cloud['Cloud Service'].drop([3, 6])
-fig = to_show(cloud, 'top used cloud service')
-plt.xlabel(None)
-plt.ylabel(None)
+fig, axes = plt.subplots(3, 2, figsize = (25, 15))
+jobrole = df.groupby('Q23')
+fig.suptitle('Most Used Machine Learning Algorithms And By Whom\n', weight = 'bold', size = 35)
+#'Data Scientist'
+ds_df = jobrole.get_group('Data Scientist')
+ds_df = to_transform('Q18_1', 'Q18_14', 'lang_df', 'lang', 'ML Algorithm', data = ds_df)
+g = sns.barplot(data = ds_df, y = ds_df['ML Algorithm'][:5], x = 'Count', ax = axes[0][0], palette = 'deep')
+g.set_title('Data Scientist', loc = 'right', size = 20)
+g.set_ylabel(None)
+g.set_xlabel(None)
+g.set_yticklabels(ds_df['ML Algorithm'][:5], fontsize = 16)
+g.set_xticklabels(g.get_xticks(), size = 14)
+#'Machine Learning/ MLops Engineer'
+ds_df = jobrole.get_group('Machine Learning/ MLops Engineer')
+ds_df = to_transform('Q18_1', 'Q18_14', 'lang_df', 'lang', 'ML Algorithm', data = ds_df)
+g = sns.barplot(data = ds_df, y = ds_df['ML Algorithm'][:5], x = 'Count', ax = axes[0][1], palette = 'deep')
+g.set_title('Machine Learning Engineer', loc = 'right', size = 20)
+g.set_ylabel(None)
+g.set_xlabel(None)
+g.set_yticklabels(ds_df['ML Algorithm'][:5], fontsize = 16)
+g.set_xticklabels(g.get_xticks(), size = 14)
+#'Data Analyst (Business, Marketing, Financial, Quantitative, etc)'
+ds_df = jobrole.get_group('Data Analyst (Business, Marketing, Financial, Quantitative, etc)')
+ds_df = to_transform('Q18_1', 'Q18_14', 'lang_df', 'lang', 'ML Algorithm', data = ds_df)
+g = sns.barplot(data = ds_df, y = ds_df['ML Algorithm'][:5], x = 'Count', ax = axes[1][0], palette = 'deep')
+g.set_title('Data Analyst', loc = 'right', size = 20)
+g.set_ylabel(None)
+g.set_xlabel(None)
+g.set_yticklabels(ds_df['ML Algorithm'][:5], fontsize = 16)
+g.set_xticklabels(g.get_xticks(), size = 14)
+#'Research Scientist'
+ds_df = jobrole.get_group('Research Scientist')
+ds_df = to_transform('Q18_1', 'Q18_14', 'lang_df', 'lang', 'ML Algorithm', data = ds_df)
+g = sns.barplot(data = ds_df, y = ds_df['ML Algorithm'][:5], x = 'Count', ax = axes[2][0], palette = 'deep')
+g.set_title('Research Scientist', loc = 'right', size = 20)
+g.set_ylabel(None)
+g.set_xlabel(None)
+g.set_yticklabels(ds_df['ML Algorithm'][:5], fontsize = 16)
+g.set_xticklabels(g.get_xticks(), size = 14)
+# 'Software Engineer'
+ds_df = jobrole.get_group('Software Engineer')
+ds_df = to_transform('Q18_1', 'Q18_14', 'lang_df', 'lang', 'ML Algorithm', data = ds_df)
+g = sns.barplot(data = ds_df, y = ds_df['ML Algorithm'][:5], x = 'Count', ax = axes[1][1], palette = 'deep')
+g.set_title('Software Engineer', loc = 'right', size = 20)
+g.set_ylabel(None)
+g.set_xlabel(None)
+g.set_yticklabels(ds_df['ML Algorithm'][:5], fontsize = 16)
+g.set_xticklabels(g.get_xticks(), size = 14)
+# 'Manager'
+ds_df = jobrole.get_group('Manager (Program, Project, Operations, Executive-level, etc)')
+ds_df = to_transform('Q18_1', 'Q18_14', 'lang_df', 'lang', 'ML Algorithm', data = ds_df)
+g = sns.barplot(data = ds_df, y = ds_df['ML Algorithm'][:5], x = 'Count', ax = axes[2][1], palette = 'deep')
+g.set_title('Manager', loc = 'right', size = 20)
+g.set_ylabel(None)
+g.set_xlabel(None)
+g.set_yticklabels(ds_df['ML Algorithm'][:5], fontsize = 16)
+g.set_xticklabels(g.get_xticks(), size = 14)
+plt.tight_layout()
 with st.container():
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 2])
     with col2:
         st.pyplot(fig)
     with col1:
@@ -207,14 +289,48 @@ with st.container():
 
 st.write('\n')
 
-fig, ax = plt.subplots()
-db = to_transform('Q35_1', 'Q35_16', 'db_df', 'db', 'Database')
-db['Database'] = db['Database'].drop([5, 14])
-fig = to_show(db, 'top used databases')
-plt.xlabel(None)
-plt.ylabel(None)
+fig, axs = plt.subplots(2, 2, figsize = (23, 10))
+fig.suptitle('Different Job Titles By Countries\n', weight = 'bold', size = 25)
+country = df.groupby('Q4')
+job = country.get_group('India')['Q23'].value_counts()
+job = job.reset_index()
+sns.barplot(data= job, y = job['index'][:10], x = job['Q23'][:10], palette = 'deep', ax = axs[0][0])
+ax = axs[0][0]
+ax.set_ylabel(None)
+ax.set_xlabel(None, labelpad = 10)
+ax.set_title('India', loc = 'right', size = 15)
+ax.set_yticklabels(job['index'][:10], size = 14)
+ax.set_xticklabels(ax.get_xticks(), size = 15)
+job = country.get_group('United States of America')['Q23'].value_counts()
+job = job.reset_index()
+sns.barplot(data= job, y = job['index'][:10], x = job['Q23'][:10], palette = 'deep', ax = axs[0][1])
+ax = axs[0][1]
+ax.set_ylabel(None)
+ax.set_xlabel(None, labelpad = 10)
+ax.set_title('USA', loc = 'right', size = 15)
+ax.set_yticklabels(job['index'][:10], size = 14)
+ax.set_xticklabels(ax.get_xticks(), size = 15)
+job = country.get_group('Canada')['Q23'].value_counts()
+job = job.reset_index()
+sns.barplot(data= job, y = job['index'][:10], x = job['Q23'][:10], palette = 'deep', ax = axs[1][0])
+ax = axs[1][0]
+ax.set_ylabel(None)
+ax.set_xlabel(None, labelpad = 10)
+ax.set_title('Canada', loc = 'right', size = 15)
+ax.set_yticklabels(job['index'][:10], size = 14)
+ax.set_xticklabels(ax.get_xticks(), size = 15)
+job = country.get_group('United Kingdom of Great Britain and Northern Ireland')['Q23'].value_counts()
+job = job.reset_index()
+sns.barplot(data= job, y = job['index'][:10], x = job['Q23'][:10], palette = 'deep', ax = axs[1][1])
+ax = axs[1][1]
+ax.set_ylabel(None)
+ax.set_xlabel(None, labelpad = 10)
+ax.set_title('UK', loc = 'right', size = 15)
+ax.set_yticklabels(job['index'][:10], size = 14)
+ax.set_xticklabels(ax.get_xticks(), size = 15)
+plt.tight_layout()
 with st.container():
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([3, 1])
     with col1:
         st.pyplot(fig)
     with col2:
@@ -222,15 +338,185 @@ with st.container():
 
 st.write('\n')
 
-fig, ax = plt.subplots()
-bi = to_transform('Q36_1', 'Q36_15', 'bi_df', 'bi', 'BI Tool')
-bi['BI Tool'] = bi['BI Tool'].drop([0, 6])
-fig = to_show(bi, 'top used business intelligence tools')
-plt.xlabel(None)
-plt.ylabel(None)
+fig, axs = plt.subplots(5, 3, figsize = (30, 30))
+country_job_salary = df.groupby(['Q4', 'Q23'])
+fig.suptitle('Annual Income Of Certain Jobs By Country\n', weight = 'bold', size = 30)
+g = country_job_salary.get_group(('India', 'Data Scientist'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[0][0], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('India|Data Scientist', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('India', 'Data Scientist'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+# usa, data scientist
+g = country_job_salary.get_group(('United States of America', 'Data Scientist'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[0][1], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('USA|Data Scientist', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('United States of America', 'Data Scientist'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+# canada, data scientist
+g = country_job_salary.get_group(('Canada', 'Data Scientist'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[0][2], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('Canada|Data Scientist', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('Canada', 'Data Scientist'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+# india, ml
+g = country_job_salary.get_group(('India', 'Machine Learning/ MLops Engineer'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[1][0], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('India|ML Engineer', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('India', 'Machine Learning/ MLops Engineer'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+# usa, ml
+g = country_job_salary.get_group(('United States of America', 'Machine Learning/ MLops Engineer'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[1][1], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('USA|ML Engineer', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('United States of America', 'Machine Learning/ MLops Engineer'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+# canada, ml
+g = country_job_salary.get_group(('Canada', 'Machine Learning/ MLops Engineer'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[1][2], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('Canada|ML Engineer', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('Canada', 'Machine Learning/ MLops Engineer'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+# india, research
+g = country_job_salary.get_group(('India', 'Research Scientist'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[2][0], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('India|Research Scientist', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('India', 'Research Scientist'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+# usa, research
+g = country_job_salary.get_group(('United States of America', 'Research Scientist'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[2][1], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('USA|Research Scientist', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('United States of America', 'Research Scientist'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+# canada, research
+g = country_job_salary.get_group(('Canada', 'Research Scientist'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[2][2], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('Canada|Research Scientist', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('Canada', 'Research Scientist'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+# india, se
+g = country_job_salary.get_group(('India', 'Software Engineer'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[3][0], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('India|Sofware Engineer', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('India', 'Software Engineer'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+# usa, se
+g = country_job_salary.get_group(('United States of America', 'Software Engineer'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[3][1], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('USA|Sofware Engineer', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('United States of America', 'Software Engineer'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+# canada, se
+g = country_job_salary.get_group(('Canada', 'Software Engineer'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[3][2], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('Canada|Sofware Engineer', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('Canada', 'Software Engineer'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+# india, da
+g = country_job_salary.get_group(('India', 'Data Analyst (Business, Marketing, Financial, Quantitative, etc)'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[4][0], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('India|Data Analyst', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('India', 'Data Analyst (Business, Marketing, Financial, Quantitative, etc)'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+# usa, da
+g = country_job_salary.get_group(('United States of America', 'Data Analyst (Business, Marketing, Financial, Quantitative, etc)'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[4][1], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('USA|Data Analyst', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('United States of America', 'Data Analyst (Business, Marketing, Financial, Quantitative, etc)'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+# canada, da
+g = country_job_salary.get_group(('Canada', 'Data Analyst (Business, Marketing, Financial, Quantitative, etc)'))['Q29'].value_counts().head(7).plot(kind = 'barh', ax = axs[4][2], color = sns.palettes.color_palette('deep'))
+g.invert_yaxis()
+g.set_title('Canada|Data Analyst', loc = 'right', size = 25)
+tick = country_job_salary.get_group(('Canada', 'Data Analyst (Business, Marketing, Financial, Quantitative, etc)'))['Q29'].value_counts().head(7).index
+g.set_yticklabels(tick, size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+plt.tight_layout()
 with st.container():
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 3])
     with col2:
         st.pyplot(fig)
     with col1:
+        st.write('Caption for second chart')
+
+st.write('\n')
+
+fig, axs = plt.subplots(3, 2, figsize = (25, 15))
+fig.suptitle('What One Can Expect To Do As Per The Job Title\n', weight = 'bold', size = 30)
+#df['Q28_1'] = df['Q28_1'].str.replace('uses', '\nuses')
+df['Q28_2'] = df['Q28_2'].str.replace('uses', 'uses\n')
+#df['Q28_3'] = df['Q28_3'].str.replace('applying', 'applying\n')
+df['Q28_4'] = df['Q28_4'].str.replace('that', '\nthat')
+#df['Q28_5'] = df['Q28_5'].str.replace('operationally', '\noperationally')
+#df['Q28_1'] = df['Q28_1'].str.replace(' art', '\nart')
+#df['Q28_1'] = df['Q28_1'].str.replace('part', '\npart')
+jobrole = df.groupby('Q23')
+ds_df = jobrole.get_group('Data Scientist')
+ds_df = to_transform('Q28_1', 'Q28_8', 'role_df', 'ds_df', 'Job Role', data = ds_df)
+g = sns.barplot(data = ds_df, x = 'Count', y = 'Job Role', ax = axs[0][0])
+g.set_title('Data Scientist', loc = 'right', size = 15)
+g.set_ylabel(None)
+g.set_xlabel(None)
+g.set_yticklabels(ds_df['Job Role'], size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+ds_df = jobrole.get_group('Machine Learning/ MLops Engineer')
+ds_df = to_transform('Q28_1', 'Q28_8', 'role_df', 'ds_df', 'Job Role', data = ds_df)
+g = sns.barplot(data = ds_df, x = 'Count', y = 'Job Role', ax = axs[0][1])
+g.set_title('ML Engineer', loc = 'right', size = 15)
+g.set_ylabel(None)
+g.set_xlabel(None)
+g.set_yticklabels(ds_df['Job Role'], size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+ds_df = jobrole.get_group('Data Analyst (Business, Marketing, Financial, Quantitative, etc)')
+ds_df = to_transform('Q28_1', 'Q28_8', 'role_df', 'ds_df', 'Job Role', data = ds_df)
+g = sns.barplot(data = ds_df, x = 'Count', y = 'Job Role', ax = axs[1][0])
+g.set_title('Data Analyst', loc = 'right', size = 15)
+g.set_ylabel(None)
+g.set_xlabel(None)
+g.set_yticklabels(ds_df['Job Role'], size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+ds_df = jobrole.get_group('Software Engineer')
+ds_df = to_transform('Q28_1', 'Q28_8', 'role_df', 'ds_df', 'Job Role', data = ds_df)
+g = sns.barplot(data = ds_df, x = 'Count', y = 'Job Role', ax = axs[1][1])
+g.set_title('Software Engineer', loc = 'right', size = 15)
+g.set_ylabel(None)
+g.set_xlabel(None)
+g.set_yticklabels(ds_df['Job Role'], size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+ds_df = jobrole.get_group('Research Scientist')
+ds_df = to_transform('Q28_1', 'Q28_8', 'role_df', 'ds_df', 'Job Role', data = ds_df)
+g = sns.barplot(data = ds_df, x = 'Count', y = 'Job Role', ax = axs[2][0])
+g.set_title('Research Scientist', loc = 'right', size = 15)
+g.set_ylabel(None)
+g.set_xlabel(None)
+g.set_yticklabels(ds_df['Job Role'], size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+ds_df = jobrole.get_group('Manager (Program, Project, Operations, Executive-level, etc)')
+ds_df = to_transform('Q28_1', 'Q28_8', 'role_df', 'ds_df', 'Job Role', data = ds_df)
+g = sns.barplot(data = ds_df, x = 'Count', y = 'Job Role', ax = axs[2][1])
+g.set_title('Manager', loc = 'right', size = 15)
+g.set_ylabel(None)
+g.set_xlabel(None)
+g.set_yticklabels(ds_df['Job Role'], size = 15)
+g.set_xticklabels(g.get_xticks(), size = 15)
+plt.tight_layout()
+with st.container():
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        st.pyplot(fig)
+    with col2:
         st.write('Caption for second chart')
