@@ -5,7 +5,7 @@ import seaborn as sns
 import streamlit as st
 
 plt.style.use('ggplot')
-sns.set_theme(font = 'Georgia', palette = 'deep')
+sns.set_theme(palette = 'deep')
 st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 2022", layout="wide", page_icon='👨‍💻')
 #plt.rcParams["axes.edgecolor"] = "black"
 #plt.rcParams["axes.linewidth"] = 0.5
