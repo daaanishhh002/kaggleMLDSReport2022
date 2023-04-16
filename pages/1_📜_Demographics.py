@@ -5,13 +5,13 @@ import seaborn as sns
 import streamlit as st
 
 plt.style.use('ggplot')
-sns.set_theme(palette = 'deep')
-st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 2022", layout="wide")
+sns.set_theme(font = 'Georgia', palette = 'deep')
+st.set_page_config(page_title="Kaggle Machine Learning & Data Science Report 2022", layout="wide", page_icon='👨‍💻')
 #plt.rcParams["axes.edgecolor"] = "black"
 #plt.rcParams["axes.linewidth"] = 0.5
 
-url = "https://raw.githubusercontent.com/daaanishhh4218/kaggleMLDSReport2022/main/kaggle_survey_2022_responses.csv"
-df = pd.read_csv(url)
+path = "C:\\Users\\dzuz1\\Desktop\\Python\\datasets\\kaggle_survey_2022_responses.csv"
+df = pd.read_csv(path)
 
 df = df.rename(columns = {'Duration (in seconds)': 'Q1'})
 
@@ -80,6 +80,7 @@ with st.container():
     with col2:
         st.pyplot(fig)
 
+st.write('\n')
 
 fig, ax = plt.subplots()
 sns.countplot(data = df, x = 'Q5', ax = ax)
@@ -95,6 +96,7 @@ with st.container():
     with col1:
         st.pyplot(fig)
 
+st.write('\n')
 
 fig, ax = plt.subplots()
 temp = df['Q4'].value_counts().drop('Other').head()
@@ -113,6 +115,7 @@ with st.container():
     with col2:
         st.pyplot(fig)
 
+st.write('\n')
 
 df['Q8'] = df['Q8'].str.replace('education', 'education\n')
 df['Q8'] = df['Q8'].str.replace('university', 'university\n')
@@ -129,6 +132,7 @@ with st.container():
     with col1:
         st.pyplot(fig)
 
+st.write('\n')
 
 fig, axs = plt.subplots(3, 2, figsize = (30, 20))
 fig.suptitle('Education Requirement For Some ML/DS Jobs\n', size = 35, weight = 'bold')
@@ -201,6 +205,7 @@ with st.container():
     with col2:
         st.pyplot(fig)
 
+st.write('\n')
 
 fig, axes = plt.subplots(2, 2, figsize = (30, 16))
 fig.suptitle('Education Level Among Some Countries\n', size = 30, weight = 'bold')
@@ -249,6 +254,7 @@ with st.container():
     with col1:
         st.pyplot(fig)
 
+st.write('\n')
 
 fig, axs = plt.subplots(3, 2, figsize = (25, 17))
 country = df.groupby('Q4')
@@ -334,6 +340,8 @@ with st.container():
     with col2:
         st.pyplot(fig)
 
+st.write('\n')
+
 media = to_transform('Q44_1', 'Q44_12', 'media_df', 'media', 'Media Source')
 fig, ax = plt.subplots()
 to_show(media, 'favourite media souces for machine learning and data science')
@@ -342,7 +350,7 @@ ax.set_xlabel(None)
 ax.set_ylabel(None)
 plt.tight_layout()
 with st.container():
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([2, 1])
     with col2:
         st.write('Caption for second chart')
     with col1:
